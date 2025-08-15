@@ -5,6 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# in Quarto we use " | echo: "
 library(tidyverse)
 ```
 
@@ -44,26 +45,37 @@ Add line-by-line comments wheres prompted in the code below, explaining what eac
 # ------ comment line-by-line ---- #
 
 # The line below...
+# starting time sequence
 time_yr <- seq(from = 0, to = 8, by = 1)
 
 # The line below...
+# Creating empty matrix to store population sizes
 proj_year <- matrix(ncol = length(fish_year0), nrow = length(time_yr))
 
 # The line below...
+# Populating first row with. year 0 population size
 proj_year[1, ] <- fish_year0
 
 # The for loop below...
-for (i in 2:length(time_yr)) {
-  proj_year[i,] <- fish_leslie %*% proj_year[i-1,]
+# '2' is a place holder- It is an iterator
+# Estimate population size for each year based on the population size in the previous year
+for (i in 2:length(time_yr)) { # start with year 1
+  proj_year[i,] <- fish_leslie %*% proj_year[i-1,] # take leslie matrix but just the first row. This will do this for every row
 }
 
 
 # The rest is wrangling & visualization (run to check it out):
+# Update column names to 'eggs', 'fry', 'juvenile', 'adult'
 colnames(proj_year) <- c("eggs", "fry", "juvenile", "adult")
 
+# creating a data.frame with 'time_yr' and 'proj_year'
 proj_df <- data.frame(time_yr, proj_year) %>% 
+  # Convert format from wide columns to longer columns
+  # Pivot_longer allows for matrix to be more detailed with designated values
   pivot_longer(cols = -time_yr, names_to = "lifestage", values_to = "stage_population")
 
+
+# Plotting data with new data.frame called ' proj_df
 ggplot(data = proj_df, aes(x = time_yr, y = stage_population)) +
   geom_line(aes(color = lifestage)) +
   scale_y_log10()
