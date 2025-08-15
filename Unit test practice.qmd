@@ -10,7 +10,7 @@ First, intall necessary packages
 # install.packages("testthat")
 # install.packages("devtools")
 # install.packages("remotes")
-
+rm(list= ls())
 library(testthat)
 library(devtools)
 library(remotes)
@@ -41,7 +41,7 @@ mean_range <- function(df){
 mean_range(df = mtcars)
 ```
 
-Write some unit test !
+# Write some unit test !
 - this is a part of the development process-
 - Use this when running *larger datasets* - to test out smaller sections, to make sure it runs correctly!
 
@@ -54,7 +54,16 @@ expect_length(mean_range(df= mtcars), 2) #No output means its correct
 # Test that first value is less than second value
 expect_true(mean_range(mtcars)[1] < mean_range(mtcars)[2])
 
+```
 
 
+## Practice Sourcing Functions
+```{r}
+# Source our food cart functions
+# Grabbing function created in "Food_cart_function" in R script
+source(here::here("src", "food_cart_functions.R"))
+
+# Test running function
+name_cart(food = "strawberry", animal = "marmot")
 ```
 
